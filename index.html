@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Project: Interactive Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Oat, Slate Gray, Muted Teal) -->
+    <!-- Application Structure Plan: The SPA is structured into three main, scrollable sections: "Project Overview," "The Game Plan," and "Pro Tips." This thematic structure, distinct from the original document's linear format, is chosen for better usability. It allows learners to quickly grasp the project's scope, dive into the step-by-step plan with interactive elements, and then consult common issues. Key interactions include a stepper for the project phases and a clickable diagram for the GitHub workflow, designed to make complex processes more digestible and improve learning retention over a static text document. -->
+    <!-- Visualization & Content Choices: Report Info: Project phase timings -> Goal: Inform on time allocation -> Viz: Donut Chart -> Interaction: Hover for details -> Justification: Quick visual summary of effort distribution -> Library: Chart.js. Report Info: Step-by-step phases -> Goal: Guide user sequentially -> Presentation: Interactive Stepper -> Interaction: Click to expand phase details -> Justification: Breaks down the project into manageable steps, preventing overwhelm -> Method: HTML/JS. Report Info: GitHub workflow -> Goal: Clarify complex process -> Viz: Visual Diagram -> Interaction: Click step to see command -> Justification: More intuitive than text, reinforces the cycle -> Method: HTML/Tailwind/JS. Report Info: Common Pitfalls -> Goal: Organize and engage -> Presentation: Click-to-reveal cards -> Interaction: Click to see solution -> Justification: Encourages active problem-solving -> Method: HTML/JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F3; /* Oat */
+            color: #334155; /* Slate Gray */
+        }
+        .teal-accent {
+            color: #14B8A6; /* Muted Teal */
+        }
+        .bg-teal-accent {
+            background-color: #14B8A6; /* Muted Teal */
+        }
+        .border-teal-accent {
+            border-color: #14B8A6;
+        }
+        .phase-content {
+            display: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .phase-content.active {
+            display: block;
+            max-height: 1000px;
+        }
+        .workflow-step-command {
+            display: none;
+        }
+        .pitfall-solution {
+            display: none;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 320px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-slate-800">Group Project Guide</h1>
+            <nav class="hidden md:flex space-x-6 font-medium text-slate-600">
+                <a href="#overview" class="hover:text-teal-accent transition-colors">Overview</a>
+                <a href="#plan" class="hover:text-teal-accent transition-colors">The Plan</a>
+                <a href="#tips" class="hover:text-teal-accent transition-colors">Pro Tips</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+
+        <section id="overview" class="mb-16 scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">The Interactive Dashboard Project</h2>
+                <p class="text-lg text-slate-500 max-w-3xl mx-auto">A collaborative activity to review and apply your React and JavaScript fundamentals.</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                <p class="mb-6 text-slate-600">This project will guide you through building a simple product catalog dashboard. The primary goal is to practice working as a team, managing a shared codebase with Git, and reinforcing core programming concepts. In this guide, you'll find a complete plan, from initial setup to final presentation, designed to help your team succeed.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
+                    <div class="bg-slate-50 p-4 rounded-lg">
+                        <span class="block text-3xl font-bold teal-accent">3-4</span>
+                        <span class="block text-slate-500">Hours Duration</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg">
+                        <span class="block text-3xl font-bold teal-accent">3</span>
+                        <span class="block text-slate-500">Learners per Group</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg">
+                        <span class="block text-3xl font-bold teal-accent">2+</span>
+                        <span class="block text-slate-500">Core Skills (JS & React)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="plan" class="mb-16 scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">The Game Plan</h2>
+                <p class="text-lg text-slate-500 max-w-3xl mx-auto">Follow these phases to structure your team's workflow from start to finish.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-lg shadow-md p-6 sticky top-24">
+                        <h3 class="font-bold text-xl text-slate-700 mb-4">Project Timeline</h3>
+                        <p class="text-slate-500 mb-4">Here is a suggested breakdown of your time to keep the project on track.</p>
+                        <div class="chart-container">
+                            <canvas id="timeAllocationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 bg-white rounded-lg shadow-md p-6 md:p-8">
+                    <div id="phase-stepper">
+                        <div class="phase-container" data-phase="1">
+                            <button class="phase-header w-full text-left p-4 rounded-lg bg-slate-50 flex justify-between items-center cursor-pointer">
+                                <span class="font-bold text-lg text-slate-700">Phase 1: Planning & Setup (~30 mins)</span>
+                                <span class="font-bold text-2xl text-teal-accent transform transition-transform duration-300">+</span>
+                            </button>
+                            <div class="phase-content p-4">
+                                <p class="text-slate-600 mb-4">The key to a smooth project is a solid plan. Use this time to assign roles and prepare your collaborative environment on GitHub. Clear roles prevent confusion and ensure everyone knows their responsibilities.</p>
+                                <div class="space-y-4">
+                                    <div class="p-3 bg-slate-100 rounded">
+                                        <h4 class="font-semibold text-slate-800">Project Lead</h4>
+                                        <p class="text-sm text-slate-500">Manages timeline and facilitates communication.</p>
+                                    </div>
+                                    <div class="p-3 bg-slate-100 rounded">
+                                        <h4 class="font-semibold text-slate-800">Front-End Lead</h4>
+                                        <p class="text-sm text-slate-500">Owns the UI, component design, and styling.</p>
+                                    </div>
+                                    <div class="p-3 bg-slate-100 rounded">
+                                        <h4 class="font-semibold text-slate-800">Data/Logic Lead</h4>
+                                        <p class="text-sm text-slate-500">Owns state management and business logic.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="phase-container mt-4" data-phase="2">
+                            <button class="phase-header w-full text-left p-4 rounded-lg bg-slate-50 flex justify-between items-center cursor-pointer">
+                                <span class="font-bold text-lg text-slate-700">Phase 2: Collaborative Development (~2-3 hrs)</span>
+                                <span class="font-bold text-2xl text-teal-accent transform transition-transform duration-300">+</span>
+                            </button>
+                            <div class="phase-content p-4">
+                                <p class="text-slate-600 mb-6">This is where you'll build the application. Focus on clear communication and follow the provided GitHub workflow to avoid conflicts and integrate your work smoothly.</p>
+                                <div class="mb-6">
+                                    <h4 class="font-semibold text-slate-800 mb-3 text-lg">Project Requirements</h4>
+                                    <ul class="list-disc list-inside space-y-2 text-slate-600">
+                                        <li>Use a public API of your choice to fetch the product data.</li>
+                                        <li>Handle loading and error states for the API call.</li>
+                                        <li>Render the product list using the `.map()` method.</li>
+                                        <li>Build a reusable `ProductCard` component that accepts props.</li>
+                                        <li>Implement a search bar to filter products by name.</li>
+                                        <li>Use `useState` for product data and the search term.</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-slate-800 mb-3 text-lg">The GitHub Workflow</h4>
+                                    <p class="text-slate-600 mb-4">This structured workflow is essential for team collaboration. Click each step to see the relevant command.</p>
+                                    <div class="flex flex-col md:flex-row md:items-center md:space-x-2 space-y-2 md:space-y-0 text-sm">
+                                        <div class="workflow-step" data-command="git clone [url]">Clone</div>
+                                        <div class="arrow">→</div>
+                                        <div class="workflow-step" data-command="git checkout -b [branch-name]">Branch</div>
+                                        <div class="arrow">→</div>
+                                        <div class="workflow-step" data-command="git commit -m 'message'">Code & Commit</div>
+                                        <div class="arrow">→</div>
+                                        <div class="workflow-step" data-command="git push origin [branch-name]">Push</div>
+                                        <div class="arrow">→</div>
+                                        <div class="workflow-step" data-command="Create a Pull Request on GitHub">Pull Request</div>
+                                        <div class="arrow">→</div>
+                                        <div class="workflow-step" data-command="git checkout main && git pull">Sync</div>
+                                    </div>
+                                    <div id="workflow-command-display" class="mt-4 p-3 bg-slate-800 text-white rounded-md font-mono text-sm hidden"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="phase-container mt-4" data-phase="3">
+                             <button class="phase-header w-full text-left p-4 rounded-lg bg-slate-50 flex justify-between items-center cursor-pointer">
+                                <span class="font-bold text-lg text-slate-700">Phase 3: Final Touches & Presentation (~30 mins)</span>
+                                <span class="font-bold text-2xl text-teal-accent transform transition-transform duration-300">+</span>
+                            </button>
+                            <div class="phase-content p-4">
+                                <p class="text-slate-600">In this final phase, your team will conduct a final review of the application, clean up the project repository, and prepare a short presentation. This is a chance to showcase your work and reflect on the collaborative process.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tips" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">Pro Tips for Teamwork</h2>
+                <p class="text-lg text-slate-500 max-w-3xl mx-auto">Avoid these common pitfalls to ensure your team collaboration is a success.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="pitfall-card bg-white rounded-lg shadow-md p-6 cursor-pointer">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">Pitfall #1: Merge Conflicts</h3>
+                    <p class="text-slate-600">This happens when two people change the same part of a file, and Git doesn't know which version to keep.</p>
+                    <div class="pitfall-solution mt-4 pt-4 border-t border-slate-200">
+                        <p><span class="font-semibold text-teal-accent">Solution:</span> Always sync with the `main` branch before starting new work. Run `git pull origin main` often to stay updated and resolve smaller conflicts early.</p>
+                    </div>
+                </div>
+                 <div class="pitfall-card bg-white rounded-lg shadow-md p-6 cursor-pointer">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">Pitfall #2: Communication Breakdown</h3>
+                    <p class="text-slate-600">Duplicate work or confusion arises when team members aren't aware of what others are doing.</p>
+                    <div class="pitfall-solution mt-4 pt-4 border-t border-slate-200">
+                        <p><span class="font-semibold text-teal-accent">Solution:</span> Start with a quick 5-minute meeting to assign tasks. Use GitHub Issues or a simple to-do list to keep track of who is working on what.</p>
+                    </div>
+                </div>
+                 <div class="pitfall-card bg-white rounded-lg shadow-md p-6 cursor-pointer">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">Pitfall #3: "Cowboy Coding"</h3>
+                    <p class="text-slate-600">Pushing code directly to the `main` branch without review can introduce bugs and break the application for everyone.</p>
+                    <div class="pitfall-solution mt-4 pt-4 border-t border-slate-200">
+                        <p><span class="font-semibold text-teal-accent">Solution:</span> Strictly follow the workflow. Feature branches and Pull Requests are mandatory to ensure all code is reviewed before being merged.</p>
+                    </div>
+                </div>
+                <div class="pitfall-card bg-white rounded-lg shadow-md p-6 cursor-pointer">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">Pitfall #4: Uneven Workload</h3>
+                    <p class="text-slate-600">It's easy for one person to end up doing most of the work if tasks aren't clearly defined and distributed.</p>
+                    <div class="pitfall-solution mt-4 pt-4 border-t border-slate-200">
+                        <p><span class="font-semibold text-teal-accent">Solution:</span> The Project Lead should break the project into small, specific tasks and assign them clearly. Regular check-ins help ensure everyone is contributing.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-4 text-center text-slate-400">
+            <p>&copy; Collaborative Project Guide. Happy coding!</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('timeAllocationChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Planning & Setup', 'Development', 'Final Touches'],
+                    datasets: [{
+                        label: 'Time Allocation (minutes)',
+                        data: [30, 180, 30],
+                        backgroundColor: [
+                            '#64748B', 
+                            '#14B8A6', 
+                            '#94A3B8'
+                        ],
+                        borderColor: '#F5F5F3',
+                        borderWidth: 4,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#334155',
+                                font: {
+                                    family: "'Inter', sans-serif"
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + ' minutes';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const phaseContainers = document.querySelectorAll('.phase-container');
+            phaseContainers.forEach(container => {
+                const header = container.querySelector('.phase-header');
+                const content = container.querySelector('.phase-content');
+                const icon = header.querySelector('span:last-child');
+
+                header.addEventListener('click', () => {
+                    const isActive = content.classList.contains('active');
+                    
+                    document.querySelectorAll('.phase-content.active').forEach(activeContent => {
+                        activeContent.classList.remove('active');
+                        activeContent.closest('.phase-container').querySelector('.phase-header span:last-child').style.transform = 'rotate(0deg)';
+                    });
+
+                    if (!isActive) {
+                        content.classList.add('active');
+                        icon.style.transform = 'rotate(45deg)';
+                    }
+                });
+            });
+
+            const workflowSteps = document.querySelectorAll('.workflow-step');
+            const commandDisplay = document.getElementById('workflow-command-display');
+            workflowSteps.forEach(step => {
+                step.classList.add('bg-slate-100', 'p-2', 'rounded', 'cursor-pointer', 'hover:bg-teal-accent', 'hover:text-white', 'transition-colors', 'text-center', 'flex-1');
+                step.addEventListener('click', () => {
+                    const command = step.getAttribute('data-command');
+                    commandDisplay.textContent = command;
+                    commandDisplay.style.display = 'block';
+
+                    workflowSteps.forEach(s => s.classList.remove('bg-teal-accent', 'text-white'));
+                    step.classList.add('bg-teal-accent', 'text-white');
+                });
+            });
+            
+            const arrows = document.querySelectorAll('.arrow');
+            arrows.forEach(arrow => {
+                arrow.classList.add('text-teal-accent', 'font-bold', 'text-2xl', 'hidden', 'md:block');
+            });
+
+            const pitfallCards = document.querySelectorAll('.pitfall-card');
+            pitfallCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const solution = card.querySelector('.pitfall-solution');
+                    solution.style.display = solution.style.display === 'block' ? 'none' : 'block';
+                });
+            });
+            
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
